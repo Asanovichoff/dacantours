@@ -5,8 +5,7 @@ import Navigation from './components/Navigation'
 import Hero from './components/Hero'
 import TourCard from './components/TourCard'
 import TourDetailsModal from './components/TourDetailsModal'
-import logo from './assets/logo.jpg'
-import kyrgyzstanImage from './assets/kyrgyzstan_preview_-_coming_soon.jpg'
+import { S3_ASSETS } from './config/s3Config'
 
 function App() {
   const [tours, setTours] = useState([])
@@ -227,7 +226,7 @@ function App() {
       <section id="kyrgyzstan" className="relative min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${kyrgyzstanImage})` }}
+          style={{ backgroundImage: `url(${S3_ASSETS.images.kyrgyzstanPreview})` }}
         >
           <div className="absolute inset-0 bg-black/40" />
         </div>
@@ -247,7 +246,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <img src={logo} alt="DACANTOURS Logo" className="h-8 w-auto mb-4" />
+              <img src={S3_ASSETS.images.logo} alt="DACANTOURS Logo" className="h-8 w-auto mb-4" />
               <p className="text-gray-400">Discover America's most breathtaking natural wonders with our expert-guided tours. Soon expanding to Kyrgyzstan for global adventures!</p>
             </div>
             <div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import logo from '../assets/logo.jpg';
+import { S3_ASSETS } from '../config/s3Config';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,7 +10,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <img src={logo} alt="DACANTOURS Logo" className="h-12 w-auto" />
+            <img src={S3_ASSETS.images.logo} alt="DACANTOURS Logo" className="h-12 w-auto" />
           </div>
 
           {/* Desktop Navigation */}
