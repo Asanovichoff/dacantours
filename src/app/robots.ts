@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-// Required by `output: "export"` — tells Next.js to emit this at build time.
+// Required by `output: "export"` — emit this at build time.
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {

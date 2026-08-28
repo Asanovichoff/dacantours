@@ -1,54 +1,143 @@
-# Dacan Tours
+# DACANTOURS
 
-Marketing site for [dacantours.com](https://dacantours.com) — a tour operator
-running custom trips across Kyrgyzstan.
+Marketing site for [dacantours.com](https://dacantours.com) — guided small-group
+tours of America's national parks, with Kyrgyzstan trips coming soon.
 
-Currently a **coming-soon landing page**. The full site is being built in stages.
+A static build of the `inbound-travel-platform` site. **The design is carried
+over unchanged**; see "Design fidelity" below for the verification.
 
 ## Stack
 
-- **Next.js 16** (App Router) with `output: "export"` — a fully static build
+- **Next.js 16** (App Router), `output: "export"` — a fully static build
 - **TypeScript**
 - **Tailwind CSS v4**
-- **Cloudflare Pages** for hosting (free, and unlike Vercel's Hobby plan it
-  permits commercial use)
+- **Cloudflare** — an assets-only Worker; static asset requests are free and
+  unlimited
 
-No database, no server. The whole site is static files.
+No database, no backend, no CMS. Tour content lives in `src/lib/tours.ts`.
 
 ## Local development
 
 ```bash
 npm install
 npm run dev      # http://localhost:3000
+npm run build    # static site -> ./out
 ```
 
-## Build
+## Images and R2
+
+Images are optimised (resized to max 2000px, WebP) — 9.75 MB of source
+photography down to 1.75 MB, visually unchanged.
+
+`src/lib/assets.ts` reads `NEXT_PUBLIC_ASSET_BASE_URL`:
+
+- **Set** → images load from that base URL (your R2 bucket)
+- **Unset** → images load from the copies in `public/images`
+
+The committed copies are the fallback so local dev and preview deploys always
+render. Once R2 is serving, you can delete `public/images` and the site keeps
+working.
+
+To publish to R2:
 
 ```bash
-npm run build    # static site is emitted to ./out
+npx wrangler login
+npx wrangler r2 bucket create dacantours-assets
+./scripts/upload-assets.sh
 ```
+
+Then connect a **custom domain** (e.g. `assets.dacantours.com`) in the R2
+bucket's public-access settings, and set `NEXT_PUBLIC_ASSET_BASE_URL` to it in
+the Worker's build settings.
+
+> Do not use the `r2.dev` URL in production — Cloudflare rate-limits it and it
+> gets no caching, WAF or bot protection.
 
 ## Deployment
 
-Cloudflare Pages builds from `main` on every push.
+The Worker builds from `main` on every push.
 
-| Setting | Value |
+| Field | Value |
 | --- | --- |
 | Build command | `npm run build` |
-| Output directory | `out` |
-| Node version | 22 |
+| Deploy command | `npx wrangler deploy` |
+| Version command | `npx wrangler versions upload` (preview branches) |
+| Root directory | *(empty)* |
 
-Secrets (e.g. the Resend API key, once contact forms land) belong in
-Cloudflare Pages environment variables — **never** in this repo.
+Do **not** use Cloudflare's "Next.js" framework preset — it runs
+`npx opennextjs-cloudflare build`, which expects a server build and fails here.
 
-## Before launch
+## Design fidelity
 
-- [ ] Set `EMAIL` and `WHATSAPP_NUMBER` in `src/app/page.tsx`
-      (an empty WhatsApp number hides the button rather than shipping a dead link)
-- [ ] Replace the drawn ridgeline with real photography once available
+The port was verified against a build of the original Vite app, rendered with
+identical image and API stubs. Section heights now match to the pixel:
 
-## Roadmap
+```
+             ORIGINAL   PORT
+hero            900      900
+about           536      536
+contact         588      588
+kyrgyzstan      720      720
+footer          349      349
+tours          1540     1548   (+8, see below)
+interest-form    784      782   (-2, see below)
+```
 
-Destination and experience pages, a custom Trip Builder, contact forms via
-Cloudflare Pages Functions + Resend, and a full Russian locale. See the
-project's architecture notes for the reasoning behind each decision.
+Three Tailwind v3 → v4 differences had to be neutralised to get there:
+
+1. **Border colour.** v4 defaults a bare `border` to `currentColor`; v3 used
+   `gray-200`. Restored in `globals.css`.
+2. **Font stack.** v4 ships a shorter default sans stack. v3's exact stack is
+   pinned in `@theme`, because the different font changed text metrics and
+   therefore where headings wrapped.
+3. **Line-height precedence.** v3 emitted `md:`/`lg:` font-size rules *after*
+   `.leading-*`, so at those breakpoints the font size's own line-height won
+   and `leading-tight` only applied on mobile. v4 orders them the other way,
+   which made the hero 39px taller. Three elements now carry explicit
+   breakpoint line-heights that reproduce v3's result exactly.
+
+The remaining `+8px` on the tours grid is the tour-card button arrow (below);
+the `-2px` is Chromium's intrinsic `input[type=date]` height under v4's
+Preflight.
+
+## What changed beyond the port
+
+Nothing visual, except where noted:
+
+- **Tour card arrow.** The source had `<span className="mr-2">Details</span>`
+  followed by an *empty* span carrying `group-hover:translate-x-1` — an arrow
+  that had gone missing. Restored as `→`. This is the +8px above.
+- **Images load reliably.** The source was a client-rendered SPA, so React
+  always created the `<img>` after mount and its `onLoad` fired. Prerendered,
+  the browser often finishes loading before hydration attaches the handler, so
+  `onLoad` never fired and every tour image stayed invisible behind its
+  placeholder. `TourCard` now also checks `img.complete` on mount.
+- **The form works.** It posted to `http://localhost:8000`, which can never
+  resolve for a visitor. It now composes a pre-filled email to
+  dacantour@gmail.com. Every field, class and message is unchanged.
+- **Country list has a fallback.** If restcountries.com is unreachable the
+  select was empty; it now falls back to a built-in list.
+- **Kyrgyzstan is selectable in the form.** The API filtered it out of the
+  grid (`is_active = false`), but both "Join Waitlist" buttons scroll to the
+  form — where it could not be chosen, making the waitlist notice unreachable.
+  The grid still hides it.
+- **SEO and favicon.** The page was titled "Vite + React" with the Vite
+  favicon and no meta description. Now has a real title, description,
+  Open Graph and Twitter cards, schema.org `TravelAgency`, `robots.txt`,
+  `sitemap.xml`, and a favicon generated from the globe in the logo.
+- **Content fixes.** Footer read "© 2025 DAKANTOURS" (everywhere else
+  DACANTOURS); "Seattle,WA" was missing a space. Email and phone in the
+  contact section are now real `mailto:`/`tel:` links.
+- **Accessibility.** Form labels are associated with their inputs, the mobile
+  menu button has `aria-expanded`, the details modal closes on Escape and traps
+  focus, decorative SVGs are `aria-hidden`, and a `prefers-reduced-motion`
+  block was added.
+
+## Open items
+
+- [ ] Hero background is still a remote Unsplash URL — the one image not in
+      the asset set. Worth replacing with your own photograph.
+- [ ] `logo.jpg` in the source is actually a PNG with transparency. The copy
+      here is `logo.webp`, lossless, alpha preserved.
+- [ ] The form opens the visitor's mail client. A Cloudflare Worker function
+      plus an email API would let it submit directly.

@@ -1,75 +1,130 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ *
+ * Tailwind v4 compatibility.
+ *
+ * v4 ships a shorter default font stack than v3 (v3 listed -apple-system,
+ * Segoe UI, Roboto, Helvetica Neue and Arial explicitly). That changes the
+ * font actually selected on some platforms, which changes text metrics and
+ * therefore where headings wrap. Pinning v3's exact stack keeps the design
+ * rendering identically.
+ * ------------------------------------------------------------------ */
 @theme {
-  /* Alpine dusk palette — Tien Shan at golden hour */
-  --color-night: #060d15;
-  --color-deep: #0a1725;
-  --color-ridge: #122a3d;
-  --color-slate-ridge: #1d3d54;
-  --color-lake: #1f7683;
-  --color-ember: #e0a047;
-  --color-ember-soft: #f0c584;
-  --color-snow: #f4f0e6;
-  --color-mist: #93a7b8;
-
-  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
-  --font-body: "Inter Variable", system-ui, -apple-system, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --default-font-family: var(--font-sans);
 }
 
+/* ------------------------------------------------------------------ *
+ * Tailwind v4 compatibility.
+ *
+ * The source project was built on Tailwind v3, where a bare `border`
+ * or `divide` defaults to gray-200. v4 changed that default to
+ * currentColor, which would visibly alter the details modal. This
+ * restores the v3 behaviour so the design renders unchanged.
+ * ------------------------------------------------------------------ */
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    background-color: var(--color-night);
-    color: var(--color-snow);
-    font-family: var(--font-body);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-
-  ::selection {
-    background-color: var(--color-ember);
-    color: var(--color-night);
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 }
 
-/* Fine film grain so the large flat gradients don't band on wide screens */
-.grain::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* ------------------------------------------------------------------ *
+ * Everything below is carried over verbatim from the source project's
+ * src/index.css. Do not restyle — the design is intentionally fixed.
+ * ------------------------------------------------------------------ */
+
+/* Custom animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.9; }
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
-@keyframes drift {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-14px); }
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
 }
 
-.animate-rise {
-  animation: rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
+.animate-float-delayed {
+  animation: float-delayed 4s ease-in-out infinite;
+}
+
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Added: the fixed nav is 64px tall, so anchor targets landed under it.
+   Not a visual change — it only affects where in-page links stop. */
+:target {
+  scroll-margin-top: 4rem;
+}
+
+/* Added: respect the OS reduced-motion setting. The float and fade
+   animations above otherwise run regardless. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

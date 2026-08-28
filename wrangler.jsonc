@@ -3,10 +3,6 @@
   // omitted. Cloudflare serves ./out directly. Requests to static assets are
   // free and unlimited — only Worker script invocations are billed, and this
   // Worker has no script.
-  //
-  // NOTE: "name" must match the Worker's name in the Cloudflare dashboard,
-  // otherwise `wrangler deploy` creates a second Worker instead of updating
-  // the existing one.
   "name": "dacantours",
   "compatibility_date": "2026-08-27",
   "assets": {

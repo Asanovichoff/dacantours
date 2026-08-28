@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Fully static build -> ./out, deployable to Cloudflare Pages at zero cost.
+  // Fully static build -> ./out, served by an assets-only Cloudflare Worker.
   output: "export",
-  // Emit /about/index.html instead of /about.html so static hosts resolve
-  // clean URLs without rewrite rules.
+  // Emit /about/index.html so static hosts resolve clean URLs with no rewrites.
   trailingSlash: true,
   images: {
-    // Static export has no image optimization server. We will add a
-    // build-time sharp pipeline + custom loader when real photography lands.
+    // `output: "export"` has no image optimization server. Imagery is currently
+    // remote placeholders; when real photography lands it gets committed and
+    // run through a build-time sharp pipeline instead.
     unoptimized: true,
   },
 };

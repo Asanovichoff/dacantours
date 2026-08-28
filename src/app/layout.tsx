@@ -1,61 +1,58 @@
 import type { Metadata, Viewport } from "next";
-
-// Fonts are self-hosted via npm rather than next/font/google. This keeps the
-// build free of any network call to Google, removes a third-party request for
-// visitors, and means the site still builds if Google Fonts is unreachable.
-import "@fontsource-variable/inter";
-import "@fontsource-variable/fraunces";
-import "@fontsource-variable/fraunces/standard-italic.css";
 import "./globals.css";
 
 const SITE = "https://dacantours.com";
 
+/**
+ * The source project shipped Vite's default index.html — titled
+ * "Vite + React", with the Vite favicon and no meta description. None of this
+ * is visible on the page; it is what Google, Slack, iMessage and browser tabs
+ * read. The favicon and apple-icon are generated from the globe in the logo.
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "Dacan Tours — Custom Trips Across Kyrgyzstan",
-    template: "%s · Dacan Tours",
+    default: "DACANTOURS — Guided Tours of America's National Parks",
+    template: "%s · DACANTOURS",
   },
   description:
-    "Custom-built journeys through the Tien Shan mountains of Kyrgyzstan — alpine lakes, high passes, horseback trekking and yurt camps. Design your own trip, any length, private or small group. Launching soon.",
+    "Small-group guided tours through America's most spectacular wilderness — the Grand Canyon and Southwest canyons, Alaska's northern lights, Hawaii, and the West Coast national parks. Kyrgyzstan adventures coming soon.",
   keywords: [
+    "US national park tours",
+    "Grand Canyon tour",
+    "Alaska northern lights tour",
+    "Hawaii Oahu tour",
+    "Yosemite Sequoia tour",
+    "small group adventure travel",
     "Kyrgyzstan tours",
-    "Tien Shan trekking",
-    "Song-Kul",
-    "Kel-Suu",
-    "horseback riding Kyrgyzstan",
-    "yurt camp",
-    "custom trips Kyrgyzstan",
-    "Central Asia travel",
+    "DACANTOURS",
   ],
-  authors: [{ name: "Dacan Tours" }],
-  alternates: {
-    canonical: "/",
-  },
+  authors: [{ name: "DACANTOURS" }],
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE,
-    siteName: "Dacan Tours",
-    title: "Dacan Tours — Custom Trips Across Kyrgyzstan",
+    siteName: "DACANTOURS",
+    title: "DACANTOURS — Guided Tours of America's National Parks",
     description:
-      "Alpine lakes, high passes, horseback trekking and yurt camps. Trips built around you. Launching soon.",
+      "Small-group guided tours through America's most spectacular wilderness. Kyrgyzstan adventures coming soon.",
     locale: "en_US",
-    alternateLocale: ["ru_RU"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dacan Tours — Custom Trips Across Kyrgyzstan",
+    title: "DACANTOURS — Guided Tours of America's National Parks",
     description:
-      "Alpine lakes, high passes, horseback trekking and yurt camps. Trips built around you. Launching soon.",
+      "Small-group guided tours through America's most spectacular wilderness. Kyrgyzstan adventures coming soon.",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#060d15",
+  themeColor: "#111827", // matches bg-gray-900
   width: "device-width",
   initialScale: 1,
 };
@@ -63,15 +60,18 @@ export const viewport: Viewport = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
-  name: "Dacan Tours",
+  name: "DACANTOURS",
   url: SITE,
-  description:
-    "Custom-built trips across Kyrgyzstan — trekking, horseback riding and yurt stays in the Tien Shan mountains.",
-  areaServed: {
-    "@type": "Country",
-    name: "Kyrgyzstan",
+  email: "dacantour@gmail.com",
+  telephone: "+1-425-546-9231",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Seattle",
+    addressRegion: "WA",
+    addressCountry: "US",
   },
-  knowsLanguage: ["en", "ru", "ky"],
+  description:
+    "Guided small-group tours of America's national parks and wilderness, with Kyrgyzstan adventures coming soon.",
 };
 
 export default function RootLayout({
@@ -79,12 +79,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="grain antialiased">
+      <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         {children}
       </body>
