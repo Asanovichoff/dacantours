@@ -2,20 +2,20 @@
  * Asset URLs.
  *
  * The source project served images from an AWS S3 bucket
- * (dacantoursbacket.s3.us-east-2.amazonaws.com). This build points at
- * Cloudflare R2 instead — no egress charges, and it sits alongside the
- * Worker that serves the site.
+ * (dacantoursbacket.s3.us-east-2.amazonaws.com). They now ship with the site
+ * in /public/images and are served by the Cloudflare Worker, whose static
+ * asset requests are free and unlimited.
  *
- * Set NEXT_PUBLIC_ASSET_BASE_URL to the bucket's public URL at build time.
- * When it is unset the site falls back to the optimised copies committed in
- * /public/images, so local dev and preview deployments always render even
- * before the bucket exists. Once R2 is live you can delete the fallback
- * copies and the site keeps working.
+ * The images are optimised to WebP at max 2000px wide — 9.75 MB of source
+ * photography down to 1.75 MB, visually unchanged. At that size there is
+ * nothing to gain from external object storage.
+ *
+ * If you later want to swap photos without redeploying, move these files to
+ * an R2 bucket on a custom domain and change `asset()` below to prefix the
+ * bucket URL. Nothing else needs to change.
  */
-const R2_BASE = process.env.NEXT_PUBLIC_ASSET_BASE_URL?.replace(/\/$/, "");
-
 function asset(name: string): string {
-  return R2_BASE ? `${R2_BASE}/${name}.webp` : `/images/${name}.webp`;
+  return `/images/${name}.webp`;
 }
 
 export const ASSETS = {

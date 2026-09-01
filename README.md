@@ -24,34 +24,24 @@ npm run dev      # http://localhost:3000
 npm run build    # static site -> ./out
 ```
 
-## Images and R2
+## Images
 
-Images are optimised (resized to max 2000px, WebP) — 9.75 MB of source
-photography down to 1.75 MB, visually unchanged.
+Images live in `public/images` and are served by the Worker. Static asset
+requests on Workers are free and unlimited, so this costs nothing.
 
-`src/lib/assets.ts` reads `NEXT_PUBLIC_ASSET_BASE_URL`:
+They are optimised to WebP at max 2000px wide — **9.75 MB of source
+photography down to 1.75 MB**, visually unchanged. One photo alone was 7.5 MB
+at 5757px wide, displayed in a card a few hundred pixels tall.
 
-- **Set** → images load from that base URL (your R2 bucket)
-- **Unset** → images load from the copies in `public/images`
+`logo.jpg` in the source project is actually a PNG with an alpha channel
+despite its extension. It is stored here as lossless WebP with transparency
+preserved — flattening it puts a black box behind the wordmark in the nav.
 
-The committed copies are the fallback so local dev and preview deploys always
-render. Once R2 is serving, you can delete `public/images` and the site keeps
-working.
-
-To publish to R2:
-
-```bash
-npx wrangler login
-npx wrangler r2 bucket create dacantours-assets
-./scripts/upload-assets.sh
-```
-
-Then connect a **custom domain** (e.g. `assets.dacantours.com`) in the R2
-bucket's public-access settings, and set `NEXT_PUBLIC_ASSET_BASE_URL` to it in
-the Worker's build settings.
-
-> Do not use the `r2.dev` URL in production — Cloudflare rate-limits it and it
-> gets no caching, WAF or bot protection.
+R2 was considered and skipped: at 1.75 MB it saves nothing (Worker assets are
+already free) and adds a bucket, a custom domain and an upload step. If you
+later want to swap photos without redeploying, move these files to an R2
+bucket on a custom domain and add that prefix in `src/lib/assets.ts` — that
+one function is the only thing that needs to change.
 
 ## Deployment
 
@@ -137,7 +127,5 @@ Nothing visual, except where noted:
 
 - [ ] Hero background is still a remote Unsplash URL — the one image not in
       the asset set. Worth replacing with your own photograph.
-- [ ] `logo.jpg` in the source is actually a PNG with transparency. The copy
-      here is `logo.webp`, lossless, alpha preserved.
 - [ ] The form opens the visitor's mail client. A Cloudflare Worker function
       plus an email API would let it submit directly.
