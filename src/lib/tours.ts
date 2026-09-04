@@ -223,3 +223,32 @@ export const CONTACT = {
   phoneHref: "+14255469231",
   location: "Seattle, WA",
 } as const;
+
+/**
+ * The Kyrgyzstan expedition, which the site is now built around.
+ *
+ * Waitlist only: no price and no dates are published yet, deliberately. The
+ * copy below is drawn from the tour record's own description — treat it as a
+ * starting point to edit rather than finished marketing.
+ */
+export const KYRGYZSTAN = {
+  region: "Tien Shan Mountains, Kyrgyzstan",
+  durationDays: 10,
+  groupSizeMax: 10,
+  intro:
+    "Ten days across the Tien Shan — nomadic yurt camps, alpine lakes, horseback through pristine valleys, and Kyrgyz hospitality that has not been packaged for tourists.",
+  facts: [
+    { label: "Duration", value: "10 days" },
+    { label: "Region", value: "Tien Shan" },
+    { label: "Group size", value: "Max 10" },
+    { label: "Dates", value: "To be announced" },
+  ],
+  highlights: [
+    "Nights in nomadic yurt camps, hosted by the families who live there",
+    "Horseback riding across high summer pastures",
+    "Alpine lakes ringed by peaks, well above 3,000 metres",
+    "Mountain passes and valleys with no crowds and no queues",
+    "Home-cooked Kyrgyz meals and evenings around the fire",
+    "A single small group, capped at ten travellers",
+  ],
+} as const;

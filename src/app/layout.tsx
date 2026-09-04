@@ -1,4 +1,8 @@
 import type { Metadata, Viewport } from "next";
+
+// Self-hosted, so the build makes no call to Google and visitors make no
+// third-party request.
+import "@fontsource-variable/inter";
 import "./globals.css";
 
 const SITE = "https://dacantours.com";
@@ -12,12 +16,15 @@ const SITE = "https://dacantours.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "DACANTOURS — Guided Tours of America's National Parks",
+    default: "DACANTOURS — Kyrgyzstan Expedition & US National Park Tours",
     template: "%s · DACANTOURS",
   },
   description:
-    "Small-group guided tours through America's most spectacular wilderness — the Grand Canyon and Southwest canyons, Alaska's northern lights, Hawaii, and the West Coast national parks. Kyrgyzstan adventures coming soon.",
+    "A ten-day expedition through the Tien Shan mountains of Kyrgyzstan — nomadic yurt camps, alpine lakes and horseback riding. Waitlist now open. Plus small-group guided tours across America's national parks.",
   keywords: [
+    "Kyrgyzstan tour",
+    "Tien Shan expedition",
+    "Kyrgyzstan waitlist",
     "US national park tours",
     "Grand Canyon tour",
     "Alaska northern lights tour",
@@ -33,16 +40,16 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE,
     siteName: "DACANTOURS",
-    title: "DACANTOURS — Guided Tours of America's National Parks",
+    title: "DACANTOURS — Kyrgyzstan Expedition & US National Park Tours",
     description:
-      "Small-group guided tours through America's most spectacular wilderness. Kyrgyzstan adventures coming soon.",
+      "Ten days through the Tien Shan — yurt camps, alpine lakes, horseback. Waitlist now open.",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DACANTOURS — Guided Tours of America's National Parks",
+    title: "DACANTOURS — Kyrgyzstan Expedition & US National Park Tours",
     description:
-      "Small-group guided tours through America's most spectacular wilderness. Kyrgyzstan adventures coming soon.",
+      "Ten days through the Tien Shan — yurt camps, alpine lakes, horseback. Waitlist now open.",
   },
   robots: {
     index: true,
@@ -52,7 +59,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#111827", // matches bg-gray-900
+  themeColor: "#05080f", // matches the page ground
   width: "device-width",
   initialScale: 1,
 };

@@ -2,143 +2,121 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getTourImage } from "@/lib/assets";
-import type { Tour } from "@/lib/tours";
+import { mapTitleToSlug, tourDetails, type Tour } from "@/lib/tours";
 
-const TourCard = ({
+/**
+ * A tour card that opens in place.
+ *
+ * The old flow was: Details -> modal -> Continue to Interest Form -> scroll ->
+ * find the trip in a dropdown again. Four steps to say "I'm interested".
+ * Here the card expands where it sits, and one button jumps to the form with
+ * this trip already chosen.
+ */
+export default function TourCard({
   tour,
-  onInterestClick,
+  onRegister,
 }: {
   tour: Tour;
-  onInterestClick: (tour: Tour) => void;
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  onRegister: (tour: Tour) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
-
-  // The source was a client-rendered SPA, so React always created the <img>
-  // after mount and onLoad was guaranteed to fire. Here the <img> ships in the
-  // prerendered HTML, so the browser can finish loading it before hydration
-  // attaches the handler — onLoad then never fires and the image stays at
-  // opacity-0 behind the placeholder forever. Catch the already-complete case.
+  // The <img> ships in the prerendered HTML, so the browser can finish
+  // loading it before hydration attaches onLoad — in which case onLoad never
+  // fires and the image would stay invisible.
   useEffect(() => {
-    if (imgRef.current?.complete) setImageLoaded(true);
+    if (imgRef.current?.complete) setLoaded(true);
   }, []);
 
+  const slug = mapTitleToSlug(tour);
+  const details = slug ? tourDetails[slug] : undefined;
   const isCustom = tour.title === "Custom Adventure - Your Way";
 
   return (
-    <div
-      className="group relative bg-gray-700 rounded-2xl shadow-lg overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Image Container */}
-      <div className="relative h-64 overflow-hidden">
-        {/* Loading Placeholder */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-200 animate-pulse flex items-center justify-center">
-            <div className="text-blue-400 text-4xl">🏔️</div>
-          </div>
-        )}
-
-        {/* Tour Image */}
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-white/20">
+      <div className="relative aspect-[16/10] overflow-hidden bg-surface-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
           src={getTourImage(tour.title)}
           alt={tour.title}
-          className={`w-full h-full object-cover transition-transform duration-700 ${
-            isHovered ? "scale-110" : "scale-100"
-          } ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-          onLoad={handleImageLoad}
-        />
-
-        {/* Overlay on Hover */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-300 ${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`}></div>
-
-        {/* Price Badge */}
-        <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold shadow-lg ${
-          isCustom ? "bg-purple-600 text-white" : "bg-blue-600 text-white"
-        }`}>
-          {isCustom ? "Custom" : `$${tour.price}`}
-        </div>
-
-        {/* Difficulty Badge */}
-        <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold shadow-lg ${
-          tour.difficulty === "Easy" ? "bg-green-500 text-white" :
-          tour.difficulty === "Moderate" ? "bg-yellow-500 text-white" :
-          tour.difficulty === "Custom" ? "bg-purple-500 text-white" :
-          "bg-red-500 text-white"
-        }`}>
-          {tour.difficulty}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        {/* Title and Location */}
-        <div className="mb-4">
-          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-            {tour.title}
-          </h3>
-          <div className="flex items-center text-gray-300 mb-2">
-            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
-            <span className="text-sm">{tour.location}</span>
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="text-gray-300 text-sm mb-4 line-clamp-3">
-          {tour.description}
-        </p>
-
-        {/* Tour Details */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center text-sm text-gray-300">
-            <svg className="w-4 h-4 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>{tour.duration}</span>
-          </div>
-          <div className="flex items-center text-sm text-gray-300">
-            <svg className="w-4 h-4 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span>Max {tour.maxGroupSize}</span>
-          </div>
-        </div>
-
-        {/* Action Button */}
-        <button
-          type="button"
-          onClick={() => onInterestClick(tour)}
-          className={`w-full text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center group ${
-            isCustom
-              ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
-              : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+          onLoad={() => setLoaded(true)}
+          className={`h-full w-full object-cover transition-all duration-700 ease-out-quint group-hover:scale-[1.04] ${
+            loaded ? "opacity-100" : "opacity-0"
           }`}
-        >
-          <span className="mr-2">{isCustom ? "Design My Trip" : "Details"}</span>
-          {/* The source had an empty span here; it now carries the arrow the
-              adjacent `mr-2` and translate-on-hover were written for. */}
-          <span className="text-lg group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
-        </button>
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+        {!isCustom && (
+          <span className="absolute left-4 top-4 rounded-full bg-base/70 px-3 py-1 text-xs font-medium backdrop-blur-md">
+            from ${tour.price.toLocaleString()}
+          </span>
+        )}
       </div>
 
-      {/* Hover Effect Border (non-interactive) */}
-      <div className={`pointer-events-none absolute inset-0 border-2 border-blue-500 rounded-2xl transition-opacity duration-300 ${
-        isHovered ? "opacity-100" : "opacity-0"
-      }`}></div>
-    </div>
-  );
-};
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="text-lg font-semibold">{tour.title}</h3>
+        <p className="mt-1.5 text-sm text-faint">{tour.location}</p>
 
-export default TourCard;
+        <p className="mt-4 text-sm leading-relaxed text-muted">{tour.description}</p>
+
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-faint">
+          <span>{tour.duration}</span>
+          <span aria-hidden="true">·</span>
+          <span>{tour.difficulty}</span>
+          <span aria-hidden="true">·</span>
+          <span>Max {tour.maxGroupSize}</span>
+        </div>
+
+        {/* Expanded detail, in place — no overlay, no navigation. */}
+        {details && (
+          <div
+            id={`details-${tour.id}`}
+            hidden={!open}
+            className="mt-6 border-t border-line pt-6"
+          >
+            <p className="text-xs text-faint">
+              Starts in <span className="text-muted">{details.gather}</span>
+            </p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {details.highlights.map((h) => (
+                <li key={h} className="flex gap-2.5 text-sm text-muted">
+                  <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-accent" />
+                  {h}
+                </li>
+              ))}
+            </ul>
+            {details.notes.length > 0 && (
+              <ul className="mt-4 space-y-1">
+                {details.notes.map((n) => (
+                  <li key={n} className="text-xs leading-relaxed text-faint">
+                    {n}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {/* mt-auto keeps the actions on a common baseline across a row. */}
+        <div className="mt-auto flex flex-wrap items-center gap-3 pt-6">
+          <button type="button" onClick={() => onRegister(tour)} className="btn-solid !py-2.5 text-[13px]">
+            {isCustom ? "Design my trip" : "Register interest"}
+          </button>
+          {details && (
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls={`details-${tour.id}`}
+              className="text-[13px] font-medium text-muted transition-colors hover:text-ink"
+            >
+              {open ? "Less" : "What you'll see"}
+            </button>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
