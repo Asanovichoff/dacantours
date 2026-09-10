@@ -36,3 +36,6 @@ yarn-error.log*
 
 # transfer archive used when syncing from the cloud session
 _sync.tgz
+
+# full-size phone originals, kept locally only
+photo-originals/

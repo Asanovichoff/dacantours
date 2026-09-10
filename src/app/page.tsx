@@ -75,13 +75,13 @@ export default function Page() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={ALASKA.gatewayImage}
-                  alt="Snoqualmie Falls, visited on the first day"
+                  alt="Frosted trees at dusk outside Fairbanks"
                   className="h-full w-full object-cover"
                 />
               </div>
               <figcaption className="border-t border-line bg-surface px-5 py-4 text-sm text-muted">
-                <span className="text-accent">Day 1</span> — Snoqualmie Falls
-                and the first Starbucks, before the night flight north.
+                <span className="text-accent">Day 1</span> — Seattle, Snoqualmie
+                Falls and the first Starbucks, then the night flight north.
               </figcaption>
             </figure>
           </div>

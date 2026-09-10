@@ -16,8 +16,8 @@ export const ALASKA = {
   dates: "28 Nov – 5 Dec 2026",
   /** Departure date, used for the countdown. Local midnight. */
   departsISO: "2026-11-28T00:00:00",
-  heroImage: `${IMG}/aurora-hero.webp`,
-  gatewayImage: `${IMG}/snoqualmie-falls.webp`,
+  heroImage: `${IMG}/hero.webp`,
+  gatewayImage: `${IMG}/alaska-08.webp`,
 
   intro:
     "Seven days chasing the aurora across interior Alaska — dog sledding outside Fairbanks, the Chena Hot Springs under a green sky, glaciers and Alyeska above Anchorage, and late nights out looking up.",
@@ -29,20 +29,19 @@ export const ALASKA = {
     { label: "Group size", value: "Max 12" },
   ],
 
-  /** Shown as a gallery; each tile names the day it belongs to. */
+  /**
+   * Akan's own photographs from Alaska. Deliberately unlabelled — they are
+   * not tied to particular days, so the gallery presents them as a set.
+   */
   gallery: [
-    { day: 2, title: "Dog sledding", image: `${IMG}/dog-sledding.webp`,
-      caption: "A team, a sled, and open snow outside Fairbanks." },
-    { day: 3, title: "Chena Hot Springs", image: `${IMG}/chena-hot-springs.webp`,
-      caption: "Sitting in steaming water at −20°, watching the sky." },
-    { day: 3, title: "The Ice Museum", image: `${IMG}/ice-museum.webp`,
-      caption: "Carved rooms kept below freezing all year round." },
-    { day: 5, title: "Glaciers", image: `${IMG}/glaciers.webp`,
-      caption: "Ice on a scale that photographs never quite hold." },
-    { day: 6, title: "Alyeska", image: `${IMG}/alyeska-skiing.webp`,
-      caption: "A morning on the mountain above Girdwood." },
-    { day: 7, title: "Seward Harbor", image: `${IMG}/seward-harbor.webp`,
-      caption: "Boats, water, and the last day before the flight home." },
+    `${IMG}/alaska-01.webp`,
+    `${IMG}/alaska-02.webp`,
+    `${IMG}/alaska-03.webp`,
+    `${IMG}/alaska-04.webp`,
+    `${IMG}/alaska-05.webp`,
+    `${IMG}/alaska-06.webp`,
+    `${IMG}/alaska-07.webp`,
+    `${IMG}/alaska-08.webp`,
   ],
 
   itinerary: [
