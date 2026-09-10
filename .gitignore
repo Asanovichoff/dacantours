@@ -33,3 +33,6 @@ yarn-error.log*
 
 # cloudflare
 .wrangler/
+
+# transfer archive used when syncing from the cloud session
+_sync.tgz

@@ -16,12 +16,16 @@ const SITE = "https://dacantours.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "DACANTOURS — Kyrgyzstan Expedition & US National Park Tours",
+    default: "Alaska, 28 Nov – 5 Dec · DACANTOURS",
     template: "%s · DACANTOURS",
   },
   description:
-    "A ten-day expedition through the Tien Shan mountains of Kyrgyzstan — nomadic yurt camps, alpine lakes and horseback riding. Waitlist now open. Plus small-group guided tours across America's national parks.",
+    "Seven days chasing the aurora across interior Alaska, 28 November to 5 December 2026 — dog sledding outside Fairbanks, the Chena Hot Springs, glaciers and Alyeska above Anchorage. Twelve places.",
   keywords: [
+    "Alaska northern lights tour",
+    "Fairbanks aurora trip",
+    "Alaska dog sledding tour",
+    "Chena Hot Springs",
     "Kyrgyzstan tour",
     "Tien Shan expedition",
     "Kyrgyzstan waitlist",
@@ -40,16 +44,16 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE,
     siteName: "DACANTOURS",
-    title: "DACANTOURS — Kyrgyzstan Expedition & US National Park Tours",
+    title: "Alaska, 28 Nov – 5 Dec · DACANTOURS",
     description:
-      "Ten days through the Tien Shan — yurt camps, alpine lakes, horseback. Waitlist now open.",
+      "Seven days chasing the aurora — dog sledding, hot springs, glaciers. Twelve places.",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DACANTOURS — Kyrgyzstan Expedition & US National Park Tours",
+    title: "Alaska, 28 Nov – 5 Dec · DACANTOURS",
     description:
-      "Ten days through the Tien Shan — yurt camps, alpine lakes, horseback. Waitlist now open.",
+      "Seven days chasing the aurora — dog sledding, hot springs, glaciers. Twelve places.",
   },
   robots: {
     index: true,

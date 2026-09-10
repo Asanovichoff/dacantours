@@ -9,7 +9,18 @@ import { ASSETS } from "@/lib/assets";
  * can do anything. On small screens the logo and the primary action remain,
  * and the section links fall away rather than hiding behind a toggle.
  */
-export default function Nav() {
+type Link = { href: string; label: string };
+
+export default function Nav({
+  links = [
+    { href: "#tours", label: "US tours" },
+    { href: "#contact", label: "Contact" },
+  ],
+  cta = { href: "#waitlist", label: "Join the waitlist" },
+}: {
+  links?: Link[];
+  cta?: { href: string; label: string };
+}) {
   const [solid, setSolid] = useState(false);
 
   useEffect(() => {
@@ -37,24 +48,19 @@ export default function Nav() {
           {/* Over the hero photograph the bar is transparent, so the muted
               link colour is unreadable against a bright sky. Invert until the
               bar goes solid. */}
-          <a
-            href="#tours"
-            className={`hidden rounded-full px-3 py-2 text-sm transition-colors hover:text-ink sm:block ${
-              solid ? "text-muted" : "text-white/85"
-            }`}
-          >
-            US tours
-          </a>
-          <a
-            href="#contact"
-            className={`hidden rounded-full px-3 py-2 text-sm transition-colors hover:text-ink sm:block ${
-              solid ? "text-muted" : "text-white/85"
-            }`}
-          >
-            Contact
-          </a>
-          <a href="#waitlist" className="btn-solid !px-5 !py-2.5 text-[13px]">
-            Join the waitlist
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className={`hidden rounded-full px-3 py-2 text-sm transition-colors hover:text-ink sm:block ${
+                solid ? "text-muted" : "text-white/85"
+              }`}
+            >
+              {l.label}
+            </a>
+          ))}
+          <a href={cta.href} className="btn-solid !px-5 !py-2.5 text-[13px]">
+            {cta.label}
           </a>
         </div>
       </nav>

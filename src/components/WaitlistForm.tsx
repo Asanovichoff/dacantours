@@ -23,15 +23,21 @@ const OPTIONS: Tour[] = [KG, ...activeTours];
 export default function WaitlistForm({
   selectedId,
   onSelect,
+  leadId,
 }: {
   selectedId: number;
   onSelect: (id: number) => void;
+  /** Hoists one trip to the top of the list — used by the Alaska promo. */
+  leadId?: number;
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  const trip = OPTIONS.find((t) => t.id === selectedId) ?? KG;
+  const options = leadId
+    ? [...OPTIONS].sort((a, b) => (a.id === leadId ? -1 : b.id === leadId ? 1 : 0))
+    : OPTIONS;
+  const trip = options.find((t) => t.id === selectedId) ?? options[0];
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -131,7 +137,7 @@ export default function WaitlistForm({
               "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2393a1b5'%3E%3Cpath fill-rule='evenodd' d='M5.2 7.2a1 1 0 0 1 1.4 0L10 10.6l3.4-3.4a1 1 0 1 1 1.4 1.4l-4.1 4.1a1 1 0 0 1-1.4 0L5.2 8.6a1 1 0 0 1 0-1.4Z' clip-rule='evenodd'/%3E%3C/svg%3E\")",
           }}
         >
-          {OPTIONS.map((t) => (
+          {options.map((t) => (
             <option key={t.id} value={t.id} className="bg-surface">
               {t.title.includes("Kyrgyzstan") ? "Kyrgyzstan expedition" : t.title}
             </option>
