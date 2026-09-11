@@ -17,17 +17,26 @@ export const ALASKA = {
   /** Departure date, used for the countdown. Local midnight. */
   departsISO: "2026-11-28T00:00:00",
   /**
-   * Frames behind the headline, cross-faded in order. Replace with a video
-   * by filling in `heroVideo` below — these then become its poster.
+   * Stills behind the headline. With `heroVideo` set they are unused; clear
+   * `heroVideo` and the hero cross-fades these instead.
    */
   heroFrames: [`${IMG}/hero-1.webp`, `${IMG}/hero-2.webp`, `${IMG}/hero-3.webp`],
 
   /**
-   * Set this once there is an aurora clip, and the hero plays it instead:
-   *   heroVideo: { mp4: `${IMG}/aurora.mp4`, webm: `${IMG}/aurora.webm` },
-   * Keep it under ~4 MB; it loads on every visit.
+   * Akan's aurora clip. Trimmed to a seamless loop with a 1.5s cross-dissolve
+   * at the seam, silent, and served as WebM first with MP4 behind it — about
+   * 0.5 MB and 1.4 MB respectively for 13.6 seconds.
+   *
+   * `poster` is the clip's own first frame, so nothing shifts when playback
+   * starts and it is what shows if autoplay is refused (iOS low-power mode).
+   *
+   * Set this to null to fall back to the cross-faded stills.
    */
-  heroVideo: null as { mp4: string; webm: string } | null,
+  heroVideo: {
+    webm: `${IMG}/aurora.webm`,
+    mp4: `${IMG}/aurora.mp4`,
+    poster: `${IMG}/aurora-poster.webp`,
+  } as { webm: string; mp4: string; poster: string } | null,
 
   gatewayImage: `${IMG}/alaska-22.webp`,
 

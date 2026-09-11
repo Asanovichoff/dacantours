@@ -3,32 +3,47 @@ import { ALASKA } from "@/lib/alaska";
 /**
  * The moving backdrop behind the headline.
  *
- * If `ALASKA.heroVideo` is set it plays that, muted and looping, with the
- * first still as the poster so something is on screen before the file
- * arrives. Otherwise it cross-fades the aurora stills with a slow drift,
- * which gives the hero motion without shipping megabytes of video.
+ * With `ALASKA.heroVideo` set this is Akan's aurora clip, silent and looping.
+ * It is a single <video> element — the phone and wide-screen treatments are
+ * the same element restyled by `.hero-clip` in globals.css, so no device ever
+ * decodes a copy it cannot see. On wide screens a blurred still sits behind
+ * it as ambient colour; a picture is enough for something under 80px of blur.
  *
- * Swapping in a real clip is therefore a data change, not a code change.
+ * With `heroVideo` null it cross-fades the stills instead. Either way the
+ * motion is declarative — a <video> the browser drives, or CSS keyframes — so
+ * there are no timers, no state, and nothing to desync at hydration.
  *
- * The fade and drift are pure CSS — no timers, no state, nothing to go wrong
- * between the prerendered HTML and hydration. `prefers-reduced-motion`
- * freezes it on the first frame.
+ * If autoplay is refused (iOS low-power mode, data saver) the poster stays up
+ * and the hero simply reads as a still.
  */
 export default function HeroMedia() {
-  if (ALASKA.heroVideo) {
+  const video = ALASKA.heroVideo;
+
+  if (video) {
     return (
-      <video
-        className="h-full w-full object-cover"
-        poster={ALASKA.heroFrames[0]}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      >
-        <source src={ALASKA.heroVideo.webm} type="video/webm" />
-        <source src={ALASKA.heroVideo.mp4} type="video/mp4" />
-      </video>
+      <div className="h-full w-full">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={video.poster}
+          alt=""
+          aria-hidden
+          className="hero-wash absolute inset-0 hidden h-full w-full scale-150 object-cover opacity-70 blur-[80px] saturate-125 md:block"
+        />
+        <video
+          className="hero-clip"
+          poster={video.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <source src={video.webm} type="video/webm" />
+          <source src={video.mp4} type="video/mp4" />
+        </video>
+      </div>
     );
   }
 

@@ -151,3 +151,39 @@
     opacity: 1;
   }
 }
+
+/*
+ * The hero clip is a phone frame, portrait. On a phone it fills the screen
+ * with the whole composition. On a wide screen `object-cover` would crop it
+ * to a thin horizontal band through the middle of a vertical curtain, which
+ * reads as a formless smear no matter how much resolution it has — so the
+ * wide layout gives the clip its own aspect back on the right, clear of the
+ * headline, with its left edge masked so it dissolves instead of drawing a
+ * seam. One element, one decode, both layouts.
+ */
+.hero-clip {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .hero-clip {
+    inset: 0 0 0 auto;
+    width: auto;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 38%);
+    mask-image: linear-gradient(to right, transparent, #000 38%);
+  }
+}
+
+/* Ambient colour behind it on wide screens — a blurred frame, not a
+   second video, so it costs a decode of nothing. */
+.hero-wash {
+  animation: hero-drift 40s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wash { animation: none; }
+}
