@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Nav from "@/components/Nav";
 import AlaskaHero from "@/components/AlaskaHero";
-import Gallery from "@/components/Gallery";
+import PhotoReel from "@/components/PhotoReel";
 import Itinerary from "@/components/Itinerary";
 import WaitlistForm from "@/components/WaitlistForm";
 import TourCard from "@/components/TourCard";
@@ -40,10 +40,15 @@ export default function Page() {
       <main>
         <AlaskaHero />
 
-        {/* ---------------- Facts + the Seattle leg ---------------- */}
-        <section className="border-t border-line py-24 sm:py-32">
-          <div className="shell grid gap-14 lg:grid-cols-[0.9fr_1fr] lg:gap-20">
-            <div>
+        {/* ---------------- Facts ---------------- */}
+        {/*
+          One column. This used to be text beside a single photograph, which
+          repeated what the reel below does better and pushed the facts into
+          half the width they deserve. The facts now run the full measure.
+        */}
+        <section className="border-t border-line py-20 sm:py-28">
+          <div className="shell">
+            <div className="max-w-2xl">
               <p className="eyebrow">The trip</p>
               <h2 className="mt-4 text-3xl leading-[1.05] font-semibold text-balance sm:text-4xl">
                 Fairbanks for the lights, Anchorage for the ice
@@ -53,41 +58,26 @@ export default function Page() {
                 days around Fairbanks where the aurora is most reliable — then
                 move south to Anchorage for glaciers, Alyeska and the coast.
               </p>
-
-              <dl className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
-                {ALASKA.facts.map((f) => (
-                  <div key={f.label} className="bg-base px-5 py-5">
-                    <dt className="text-[11px] font-medium uppercase tracking-[0.14em] text-faint">
-                      {f.label}
-                    </dt>
-                    <dd className="mt-1.5 text-lg font-semibold">{f.value}</dd>
-                  </div>
-                ))}
-              </dl>
-
-              <a href="#register" className="btn-solid mt-9">
-                Register interest
-              </a>
             </div>
 
-            {/*
-              No caption. A tagged line under this photo read as the first
-              item of a list and left people wondering where days 2-7 went —
-              they are in <Itinerary />, a section below. The photo carries
-              itself, the way the wall's do.
-            */}
-            <div className="aspect-[16/11] self-start overflow-hidden rounded-2xl border border-line">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={ALASKA.gatewayImage}
-                alt="Frost-covered trees along a road at dusk outside Fairbanks"
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <dl className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line lg:grid-cols-4">
+              {ALASKA.facts.map((f) => (
+                <div key={f.label} className="bg-base px-6 py-7">
+                  <dt className="text-[11px] font-medium uppercase tracking-[0.14em] text-faint">
+                    {f.label}
+                  </dt>
+                  <dd className="mt-2 text-lg font-semibold">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <a href="#register" className="btn-solid mt-10">
+              Register interest
+            </a>
           </div>
         </section>
 
-        <Gallery />
+        <PhotoReel />
         <Itinerary />
 
         {/* ---------------- Register ---------------- */}

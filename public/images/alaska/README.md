@@ -8,14 +8,14 @@ shows is here.
 | `aurora.webm` / `aurora.mp4` | The hero clip, looping behind the headline |
 | `aurora-poster.webp` | Its first frame — poster and autoplay fallback |
 | `hero-1` … `hero-3.webp` | Stills the hero falls back to if the clip is removed |
-| `alaska-01` … `alaska-22.webp` | The photo wall, in order |
+| `alaska-01` … `alaska-22.webp` | Full size — fetched only when a photograph is opened |
+| `thumbs/alaska-01` … `-22.webp` | What the reel carries: 22 on screen at once, 640px, ~600 KB total |
 
-`alaska-22` also appears full-frame beside the trip facts, so it wants to be
-a landscape frame that reads well uncropped.
-
-The wall is ordered deliberately: aurora, then people, then activity, then
+The reel is ordered deliberately: aurora, then people, then activity, then
 landscape, repeating. It is not chronological, and nothing is captioned — the
-point is the feel of the week, not a labelled log of it.
+point is the feel of the week, not a labelled log of it. Order matters more
+here than it did in the old wall, because neighbours are always on screen
+together.
 
 ## The hero
 
@@ -83,10 +83,25 @@ neither bloat the repository nor get deployed.
 
 ## Replacing or adding a photograph
 
-Drop a file in under an existing name and it is picked up with no code
-change. To add more, save them as `alaska-23.webp` and so on — the `gallery`
-array in `src/lib/alaska.ts` is generated from a count, so bump the count.
+Every photograph needs both sizes — the full one here and a 640px copy in
+`thumbs/` under the same name. To cut one:
 
-The wall renders every image in a 3:4 frame with `object-cover`, so portrait
+```python
+from PIL import Image
+im = Image.open("alaska-23.webp"); w, h = im.size; s = 640 / max(w, h)
+im.resize((round(w*s), round(h*s)), Image.LANCZOS).save(
+    "thumbs/alaska-23.webp", "WEBP", quality=74, method=6)
+```
+
+Replacing one is then just overwriting both files. To add more, carry on from
+`alaska-23` and bump the count in the `gallery` array in
+`src/lib/alaska.ts`, which is generated from it.
+
+The reel renders every image in a 3:4 card with `object-cover`, so portrait
 phone photographs need no cropping. A landscape frame is cropped to its
-centre.
+centre — it still opens uncropped when tapped.
+
+The geometry adjusts itself: the cards are spaced `360 / n` degrees apart, so
+adding photographs packs them tighter rather than breaking anything. Past
+about thirty the radius in `.reel-stage` wants raising to keep them from
+overlapping — the rule is `radius >= (width / 2) / tan(180deg / n)`.

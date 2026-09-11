@@ -38,8 +38,6 @@ export const ALASKA = {
     poster: `${IMG}/aurora-poster.webp`,
   } as { webm: string; mp4: string; poster: string } | null,
 
-  gatewayImage: `${IMG}/alaska-22.webp`,
-
   intro:
     "Seven days chasing the aurora across interior Alaska — dog sledding outside Fairbanks, the Chena Hot Springs under a green sky, glaciers and Alyeska above Anchorage, and late nights out looking up.",
 
@@ -52,14 +50,18 @@ export const ALASKA = {
 
   /**
    * Akan's own photographs from Alaska. Deliberately unlabelled — they are
-   * not tied to particular days, so the gallery presents them as a set.
-   * Ordered to alternate sky, people and activity rather than grouping all
-   * the aurora shots together.
+   * not tied to particular days, so the reel presents them as a set. Ordered
+   * to alternate sky, people and activity rather than grouping all the
+   * aurora shots together.
+   *
+   * Two sizes each: `thumb` is what the reel carries — 22 of them on screen
+   * at once, so they are cut to 640px and total about 600 KB — and `full` is
+   * fetched only when someone opens a photo.
    */
-  gallery: Array.from(
-    { length: 22 },
-    (_, i) => `${IMG}/alaska-${String(i + 1).padStart(2, "0")}.webp`
-  ),
+  gallery: Array.from({ length: 22 }, (_, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    return { thumb: `${IMG}/thumbs/alaska-${n}.webp`, full: `${IMG}/alaska-${n}.webp` };
+  }),
 
   itinerary: [
     {
