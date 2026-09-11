@@ -70,20 +70,20 @@ export default function Page() {
               </a>
             </div>
 
-            <figure className="self-start overflow-hidden rounded-2xl border border-line">
-              <div className="aspect-[16/11]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={ALASKA.gatewayImage}
-                  alt="Frosted trees at dusk outside Fairbanks"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <figcaption className="border-t border-line bg-surface px-5 py-4 text-sm text-muted">
-                <span className="text-accent">Day 1</span> — Seattle, Snoqualmie
-                Falls and the first Starbucks, then the night flight north.
-              </figcaption>
-            </figure>
+            {/*
+              No caption. A tagged line under this photo read as the first
+              item of a list and left people wondering where days 2-7 went —
+              they are in <Itinerary />, a section below. The photo carries
+              itself, the way the wall's do.
+            */}
+            <div className="aspect-[16/11] self-start overflow-hidden rounded-2xl border border-line">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ALASKA.gatewayImage}
+                alt="Frost-covered trees along a road at dusk outside Fairbanks"
+                className="h-full w-full object-cover"
+              />
+            </div>
           </div>
         </section>
 
