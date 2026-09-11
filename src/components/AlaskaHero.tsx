@@ -1,16 +1,12 @@
 import Countdown from "@/components/Countdown";
+import HeroMedia from "@/components/HeroMedia";
 import { ALASKA } from "@/lib/alaska";
 
 export default function AlaskaHero() {
   return (
     <section id="top" className="relative flex min-h-[94svh] items-end overflow-hidden">
       <div className="absolute inset-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={ALASKA.heroImage}
-          alt="The northern lights over Alaska"
-          className="h-full w-full object-cover"
-        />
+        <HeroMedia />
         <div className="absolute inset-0 bg-gradient-to-t from-base via-base/70 to-base/25" />
         <div className="absolute inset-0 bg-gradient-to-r from-base/85 via-transparent to-transparent" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-base/80 to-transparent" />

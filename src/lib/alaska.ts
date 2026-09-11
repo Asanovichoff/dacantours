@@ -16,8 +16,20 @@ export const ALASKA = {
   dates: "28 Nov – 5 Dec 2026",
   /** Departure date, used for the countdown. Local midnight. */
   departsISO: "2026-11-28T00:00:00",
-  heroImage: `${IMG}/hero.webp`,
-  gatewayImage: `${IMG}/alaska-08.webp`,
+  /**
+   * Frames behind the headline, cross-faded in order. Replace with a video
+   * by filling in `heroVideo` below — these then become its poster.
+   */
+  heroFrames: [`${IMG}/hero-1.webp`, `${IMG}/hero-2.webp`, `${IMG}/hero-3.webp`],
+
+  /**
+   * Set this once there is an aurora clip, and the hero plays it instead:
+   *   heroVideo: { mp4: `${IMG}/aurora.mp4`, webm: `${IMG}/aurora.webm` },
+   * Keep it under ~4 MB; it loads on every visit.
+   */
+  heroVideo: null as { mp4: string; webm: string } | null,
+
+  gatewayImage: `${IMG}/alaska-22.webp`,
 
   intro:
     "Seven days chasing the aurora across interior Alaska — dog sledding outside Fairbanks, the Chena Hot Springs under a green sky, glaciers and Alyeska above Anchorage, and late nights out looking up.",
@@ -32,17 +44,13 @@ export const ALASKA = {
   /**
    * Akan's own photographs from Alaska. Deliberately unlabelled — they are
    * not tied to particular days, so the gallery presents them as a set.
+   * Ordered to alternate sky, people and activity rather than grouping all
+   * the aurora shots together.
    */
-  gallery: [
-    `${IMG}/alaska-01.webp`,
-    `${IMG}/alaska-02.webp`,
-    `${IMG}/alaska-03.webp`,
-    `${IMG}/alaska-04.webp`,
-    `${IMG}/alaska-05.webp`,
-    `${IMG}/alaska-06.webp`,
-    `${IMG}/alaska-07.webp`,
-    `${IMG}/alaska-08.webp`,
-  ],
+  gallery: Array.from(
+    { length: 22 },
+    (_, i) => `${IMG}/alaska-${String(i + 1).padStart(2, "0")}.webp`
+  ),
 
   itinerary: [
     {

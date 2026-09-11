@@ -54,8 +54,9 @@ export default function Gallery() {
             Photographs from the last trip
           </h2>
           <p className="mt-5 text-base leading-relaxed text-muted">
-            Aurora over Fairbanks, the dog teams, the glaciers from the air.
-            All taken on the ground, not bought in.
+            Aurora over Fairbanks, the hot springs, the dog teams, the glaciers
+            from the air — and the people who came along. All taken on the
+            trip, not bought in.
           </p>
         </div>
 

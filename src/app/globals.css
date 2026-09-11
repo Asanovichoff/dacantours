@@ -113,3 +113,41 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Hero stills: a 24s cycle of three frames, each fading up, holding,
+ * then fading out while drifting very slightly closer. Staggered by 8s
+ * in HeroMedia, so exactly one frame is at full opacity at a time.
+ * ------------------------------------------------------------------ */
+@keyframes hero-fade {
+  0%   { opacity: 0; }
+  6%   { opacity: 1; }
+  30%  { opacity: 1; }
+  38%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes hero-drift {
+  0%   { transform: scale(1.02); }
+  38%  { transform: scale(1.09); }
+  100% { transform: scale(1.09); }
+}
+
+.hero-stills > img {
+  opacity: 0;
+  will-change: opacity, transform;
+  animation:
+    hero-fade 24s linear infinite,
+    hero-drift 24s ease-out infinite;
+}
+
+/* One frame, held still. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-stills > img {
+    animation: none;
+    opacity: 0;
+  }
+  .hero-stills > img:first-child {
+    opacity: 1;
+  }
+}
